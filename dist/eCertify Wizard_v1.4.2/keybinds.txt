@@ -1,0 +1,16 @@
+~ Register Page
+
+1. Enter - Register Button
+2.
+
+
+
+~ Preview Page
+
+1. 'Tab' (Edit Mode) - Focus cursor on the next text of the same column
+2. 'Tab' (Add Keyword) - Focus cursor between the textbox of the same pair
+3. 'ctrl + E/e' or 'ctrl + S/s' or 'Enter' - Switch between save and edit mode
+4. 'ctrl + A/a/+' - Add new Keyword
+5. 'ctrl + C/c' - Clear All Keywords
+6. 'Arrow Up' - Scroll Top
+7. 'Arrow Down' - Scroll Bottom

@@ -1,0 +1,10 @@
+--- Main ~ General
+> UIX Polishing/Clean up
+> Constraints: Namelist cannot be alter while loading preview page
+
+~ Publish Format
+> Loading UI for publishing
+> format file output (png/pdf/docx)
+
+## BUGS
+> Clicking on a new template while uploading bugs out the save kv, it shows a different template

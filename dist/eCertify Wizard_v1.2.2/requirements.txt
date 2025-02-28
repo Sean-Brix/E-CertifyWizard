@@ -1,0 +1,13 @@
+Pillow
+opencv-python
+customtkinter
+tkinter
+os
+shutil
+docx2pdf
+pdf2image
+poppler
+python-docx
+python-pptx
+pywin32
+comtypes
