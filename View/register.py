@@ -3,8 +3,9 @@ from PIL import Image, ImageSequence
 from View import widget as wg
 from View.preview import openPreview, globalizeData
 from View.Controller.dx_t_img import convert_one_img
+from View.Controller.help import open_controls_page
 from tkinter import filedialog
-from os.path import basename, join, splitext, exists
+from os.path import basename, join
 from os import getcwd, makedirs, listdir
 from shutil import copy
 import time
@@ -83,7 +84,7 @@ def registerStudents(master, frame_width, frame_height):
     frameHeight = frame_height
     root = master
 
-    sideBar(mainFrame, frame_width, frame_height)
+    sideBar(mainFrame, frame_width, frame_height, master)  # Pass master to sideBar
     nameSection(mainFrame, frame_width, frame_height, master)
     mainFrame.pack(expand=True, fill=ctk.BOTH)
 
@@ -742,7 +743,7 @@ loading_frame = None
 gif_frames = 'config'
 preview_btn = 'config'
 
-def sideBar(master, frame_width, frame_height):
+def sideBar(master, frame_width, frame_height, main_window):
     global pre_template_image, preview_btn, file_label_global, loading_label, loading_animation, gif_frames, loading_frame
 
     primary_color = colors['matte_black']
@@ -766,10 +767,7 @@ def sideBar(master, frame_width, frame_height):
     template1 = ctk.CTkImage(
         light_image = Image.open('./resources/template_img/template1.png'), 
         dark_image = Image.open('./resources/template_img/template1.png'), 
-        size=(
-            btnSz[0],
-            btnSz[1]
-        )
+        size=(btnSz[0], btnSz[1])
     )
 
     templateImage = wg.newButton(
@@ -784,15 +782,42 @@ def sideBar(master, frame_width, frame_height):
     )
     pre_template_image = templateImage
 
-    preTemplateLabel = ctk.CTkLabel(
+    # Create frame to hold label and button horizontally
+    label_frame = ctk.CTkFrame(
         premade_temp_sect,
+        fg_color= primary_color
+    )
+
+    preTemplateLabel = ctk.CTkLabel(
+        label_frame,
         font= text_font,
         text = 'Template',
         anchor='w',
         justify="left",
         text_color= secondary_color
     )
-    preTemplateLabel.pack(side=ctk.TOP, expand = True, fill=ctk.BOTH)
+    
+    # Add image button next to label
+    add_icon = ctk.CTkImage(
+        light_image = Image.open('./resources/icons/help.png'),
+        dark_image = Image.open('./resources/icons/help.png'),
+        size=(30, 30)
+    )
+    
+    helpButton = ctk.CTkButton(
+        label_frame,
+        width=40,
+        height=40,
+        image=add_icon,
+        text='',
+        fg_color='transparent',
+        hover_color=colors['darker_gray'],
+        command=lambda: open_controls_page(main_window)  # Pass main_window to the function
+    )
+
+    preTemplateLabel.pack(side=ctk.LEFT, expand=True, fill=ctk.BOTH)
+    helpButton.pack(side=ctk.RIGHT)
+    label_frame.pack(side=ctk.TOP, expand=True, fill=ctk.BOTH)
     templateImage.pack(side=ctk.TOP)
 
 

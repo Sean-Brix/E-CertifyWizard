@@ -3,6 +3,7 @@ from tkinter import messagebox
 import os
 import re
 from View.register import registerStudents
+from View.Controller.help import open_controls_page
 from PIL import Image
 
 def validate_credentials(username, password):
@@ -404,7 +405,7 @@ def open_login_page(master):
 
     controls_button = ctk.CTkButton(
         login_frame, 
-        text="Open Controls", 
+        text="Help", 
         command=lambda: open_controls_page(master),
         width=220,
         corner_radius=6,
