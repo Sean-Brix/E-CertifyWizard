@@ -232,13 +232,38 @@ def nameSection(master, frame_width, frame_height, root):
     )
     textInputLabel.pack(side=ctk.LEFT, padx=20, pady= 20, fill=ctk.BOTH)
 
+    # Create tooltip frame with border
+    tooltip_frame = ctk.CTkFrame(
+        textLabelFrame,
+        fg_color=colors['gray'],
+        corner_radius=4
+    )
+    
+    # Create tooltip label inside frame
+    file_tooltip = ctk.CTkLabel(
+        tooltip_frame,
+        text="Register a list of name in text file",
+        text_color=colors['matte_black']
+    )
+    file_tooltip.pack(padx=15, pady=0)
+    
+    def show_file_tooltip():
+        tooltip_frame.place(x=file_button.winfo_x() + 170, y=file_button.winfo_y())
+        
+    def hide_file_tooltip():
+        tooltip_frame.place_forget()
+
     file_button = ctk.CTkButton(
         textLabelFrame, 
         text="Add List",
         width=150,
         text_color='white',
         command = lambda: name_list_dialog()
-    ) 
+    )
+
+    # Bind hover events
+    file_button.bind('<Enter>', lambda e: show_file_tooltip())
+    file_button.bind('<Leave>', lambda e: hide_file_tooltip())
     
     file_button.pack(side=ctk.LEFT,  padx=20)
 
@@ -803,7 +828,21 @@ def sideBar(master, frame_width, frame_height, main_window):
         dark_image = Image.open('./resources/icons/help.png'),
         size=(30, 30)
     )
+    # Create tooltip label
+    tooltip = ctk.CTkLabel(
+        label_frame,
+        text="Help",
+        fg_color='gray',
+        text_color='black',
+        corner_radius=4
+    )
     
+    def show_tooltip(event):
+        tooltip.place(x=helpButton.winfo_x() + 7, y=helpButton.winfo_y() + 45)
+        
+    def hide_tooltip(event):
+        tooltip.place_forget()
+
     helpButton = ctk.CTkButton(
         label_frame,
         width=40,
@@ -812,8 +851,12 @@ def sideBar(master, frame_width, frame_height, main_window):
         text='',
         fg_color='transparent',
         hover_color=colors['darker_gray'],
-        command=lambda: open_controls_page(main_window)  # Pass main_window to the function
+        command=lambda: open_controls_page(main_window)
     )
+    
+    # Bind hover events
+    helpButton.bind('<Enter>', show_tooltip)
+    helpButton.bind('<Leave>', hide_tooltip)
 
     preTemplateLabel.pack(side=ctk.LEFT, expand=True, fill=ctk.BOTH)
     helpButton.pack(side=ctk.RIGHT)
@@ -848,12 +891,31 @@ def sideBar(master, frame_width, frame_height, main_window):
     ) 
     file_label_global = file_label
     
+    # Create tooltip label
+    file_tooltip = ctk.CTkLabel(
+        getFileFrame,
+        text="Use my own template",
+        fg_color='white',
+        text_color=colors['matte_black'],
+        corner_radius=4
+    )
+
+    def show_file_tooltip(event):
+        file_tooltip.place(x=open_file_button.winfo_x() + 125, y=open_file_button.winfo_y() + 40)
+        
+    def hide_file_tooltip(event):
+        file_tooltip.place_forget()
+
     open_file_button = ctk.CTkButton(
         getFileFrame, 
         text="Open File", 
         command= lambda: open_file_dialog(),
         anchor='w'
     )
+
+    # Bind hover events
+    open_file_button.bind('<Enter>', show_file_tooltip)
+    open_file_button.bind('<Leave>', hide_file_tooltip)
 
     open_file_button.pack(side=ctk.TOP, pady=20, padx=25, expand=True, fill=ctk.X) 
     file_label.pack(side=ctk.TOP, pady=10, padx=25, expand=True, fill=ctk.X) 

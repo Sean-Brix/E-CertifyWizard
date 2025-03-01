@@ -6,8 +6,8 @@ from os.path import exists, join, isdir
 import sys
 import time
 
-sys.stdout = open(devnull, 'w')
-sys.stderr = open(devnull, 'w')
+# sys.stdout = open(devnull, 'w')
+# sys.stderr = open(devnull, 'w')
 app = 'root'
 
 class MyApp(ctk.CTk):
