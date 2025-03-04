@@ -1,6 +1,7 @@
 import customtkinter as ctk
 from PIL import Image
 
+
 def open_controls_page(main_window):
     controls_window = ctk.CTkToplevel()
     controls_window.title("Controls")

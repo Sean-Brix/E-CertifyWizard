@@ -32,7 +32,7 @@ missing module named asyncio.DefaultEventLoopPolicy - imported by asyncio (delay
 missing module named _posixshmem - imported by multiprocessing.resource_tracker (conditional), multiprocessing.shared_memory (conditional)
 missing module named multiprocessing.set_start_method - imported by multiprocessing (top-level), multiprocessing.spawn (top-level)
 missing module named multiprocessing.get_start_method - imported by multiprocessing (top-level), multiprocessing.spawn (top-level)
-missing module named posix - imported by os (conditional, optional), shutil (conditional), importlib._bootstrap_external (conditional), posixpath (optional)
+missing module named posix - imported by os (conditional, optional), posixpath (optional), shutil (conditional), importlib._bootstrap_external (conditional)
 missing module named resource - imported by posix (top-level)
 missing module named _frozen_importlib_external - imported by importlib._bootstrap (delayed), importlib (optional), importlib.abc (optional), zipimport (top-level)
 missing module named multiprocessing.get_context - imported by multiprocessing (top-level), multiprocessing.pool (top-level), multiprocessing.managers (top-level), multiprocessing.sharedctypes (top-level)

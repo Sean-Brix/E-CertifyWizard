@@ -34,6 +34,7 @@ class MyApp(ctk.CTk):
     def __loadComponents(self):
         open_login_page(self)
 
+
     def __on_exit(self):
         self.__clear_tempDir()
         self.destroy()
@@ -56,6 +57,7 @@ class MyApp(ctk.CTk):
         retry_rmtree(template_dir)
 
 if __name__ == "__main__":
+
     ctk.set_appearance_mode("light")
     app = MyApp()
 

@@ -74,20 +74,14 @@ def openPreview(master):
     )
     main_preview_page = mainFrame
 
-    # SECTION FRAMES
     sidebarSection()
     editingSection()
     
     mainFrame.pack(expand=True, fill=ctk.BOTH)
 
-
-
-# ______________________________________________ SIDEBAR SECTION FUNCTION ______________________________________________
-
 def sidebarSection():
     primary_color = colors['matte_black']
 
-    # Side Bar Menu
     sideBarSection = ctk.CTkFrame(
         main_preview_page,
         width= int(frame_width * 0.05),
@@ -96,7 +90,6 @@ def sidebarSection():
         corner_radius=0   
     )
 
-    # Previous page button
     top_div = ctk.CTkFrame(
         sideBarSection,
         fg_color= primary_color,
@@ -125,29 +118,26 @@ def sidebarSection():
 
     sideBarSection.pack(side= ctk.LEFT, fill=ctk.Y)
 
-
-
-# ______________________________________________ EDITING SECTION FUNCTION ______________________________________________
 edit_section_frame = 'config'
 def editingSection():
     global edit_section_frame
     editSection = ctk.CTkFrame(
         main_preview_page,
         width=frame_width,
-        height=int(frame_height * 0.6),
+        height=frame_height,
         fg_color=colors['gray'],
         corner_radius=0   
     )
     edit_section_frame = editSection
 
     prvs = prev_section()
-    wg.n_br_(prvs, 'horizontal', pad_x = 5)
+    wg.n_br_(editSection, 'horizontal')
 
     settingBarFrame = ctk.CTkFrame(
         editSection,
         width=frame_width,
-        height=int(frame_height * 0.4),
-        corner_radius=0   
+        corner_radius=0,
+        fg_color=colors['invi'],
     ) 
 
     format_setting_section(settingBarFrame)
@@ -157,13 +147,11 @@ def editingSection():
     settingBarFrame.pack(side=ctk.TOP, expand=True, fill=ctk.BOTH)
     editSection.pack(side=ctk.RIGHT, expand=True, fill=ctk.BOTH)
 
-
-# __________________ Key-Word Section __________________
-
 def keyword_setting_section(master):
     global var_editMode, glo_errorLabel, kvedit_mode, kvscroll_Frame, kvcustom_scroll, predeter_keyLabels, output_directory, root
 
     keyword_section_width = frame_width // 2
+    kwScrollWidth = int(keyword_section_width * 0.9)
 
     keyword_setting_section = ctk.CTkFrame(
         master,
@@ -172,34 +160,23 @@ def keyword_setting_section(master):
         fg_color='white'
     )
 
-    keyword_settings_label = ctk.CTkLabel(
-        keyword_setting_section, 
-        text="Keyword Settings Section"
-    )
-    if not root.frame_height <= 830:
-        keyword_settings_label.pack(side=ctk.TOP, fill=ctk.BOTH, expand=True, padx=10, pady=10)
-
     keyword_frame = ctk.CTkFrame(
         keyword_setting_section,
         fg_color="transparent",
     )
 
-
-    # Button frame
     button_frame = ctk.CTkFrame(
         keyword_setting_section,
         fg_color="transparent"
     )
 
     btnColor = colors['matte_black']
-    buttonWidth = 100
-    buttonHeight = 40
-    btnPadx = 10
-    btnPady = 5
+    buttonWidth = 70
+    buttonHeight = 30
+    btnPadx = 5
+    btnPady = 0
     btnHov = 'blue'
-    kwScrollWidth = int(keyword_section_width * 0.9)
 
-    # Add button
     add_button = ctk.CTkButton(
         button_frame,
         text="+",
@@ -210,8 +187,6 @@ def keyword_setting_section(master):
         command= kv_addEntry
     )
 
-
-    # Delete button
     edit_button = ctk.CTkButton(
         button_frame,
         text="Save",
@@ -222,7 +197,6 @@ def keyword_setting_section(master):
         command= kvpair_edit_mode
     )
 
-    # Clear button
     clear_button = ctk.CTkButton(
         button_frame,
         text="Clear",
@@ -233,14 +207,9 @@ def keyword_setting_section(master):
         command= clear_all_kvPairs
     )
 
-    if not root.frame_height < 829:
-        add_button.pack(side=ctk.LEFT, padx=btnPadx, pady=btnPady)
-        edit_button.pack(side=ctk.LEFT, padx=btnPadx, pady=btnPady)
-        clear_button.pack(side=ctk.LEFT, padx=btnPadx, pady=btnPady)
-    else:
-        add_button.pack(side=ctk.TOP, padx=btnPady, pady=btnPadx)
-        edit_button.pack(side=ctk.TOP, padx=btnPady, pady=btnPadx)
-        clear_button.pack(side=ctk.TOP, padx=btnPady, pady=btnPadx)
+    add_button.pack(side=ctk.TOP, padx=btnPady, pady=btnPadx)
+    edit_button.pack(side=ctk.TOP, padx=btnPady, pady=btnPadx)
+    clear_button.pack(side=ctk.TOP, padx=btnPady, pady=btnPadx)
 
     keywordlist_scroll = ctk.CTkScrollableFrame(
         keyword_frame,
@@ -251,28 +220,16 @@ def keyword_setting_section(master):
         fg_color=colors['pale_white'],
     )
 
-    if not root.frame_height < 829:
-        errorLabel = ctk.CTkLabel(
-            button_frame,
-            text= "",
-            fg_color= colors['soft_lavender'],
-            text_color= 'red',
-        )
-        errorLabel.pack(side=ctk.LEFT, expand = True, fill=ctk.BOTH)
-    else:
-        errorLabel = ctk.CTkLabel(
-            keyword_setting_section,
-            text= "",
-            fg_color= colors['soft_lavender'],
-            text_color= 'red',
-        )
-        errorLabel.pack(side=ctk.BOTTOM, pady=10, padx=20 , expand = True, fill=ctk.BOTH)
+    errorLabel = ctk.CTkLabel(
+        keyword_setting_section,
+        text= "",
+        fg_color= colors['soft_lavender'],
+        text_color= 'red',
+    )
+    errorLabel.pack(side=ctk.BOTTOM, pady=10, padx=20 , expand = False, fill=ctk.BOTH)
 
-    
     glo_errorLabel = errorLabel
 
-
-    # Custom scrollbar with invisible appearance
     custom_scrollbar = ctk.CTkScrollbar(
         keywordlist_scroll,
         orientation='vertical',
@@ -287,7 +244,6 @@ def keyword_setting_section(master):
     kvscroll_Frame = keywordlist_scroll
     kvcustom_scroll = custom_scrollbar
 
-    # KV Frames
     key_frame = ctk.CTkFrame(
         keywordlist_scroll,
         width=int(kwScrollWidth * 0.5),
@@ -312,52 +268,69 @@ def keyword_setting_section(master):
         border_color='black'
     )
 
-        
+    find_label = ctk.CTkLabel(
+        key_frame,
+        text="Find",
+        font=("Arial Black", 17, "bold"),
+        fg_color='transparent',
+    )
+    find_label.pack(side=ctk.TOP, expand=False, fill = ctk.X, pady=7, padx= 7)
+
+    replace_label = ctk.CTkLabel(
+        value_frame,
+        text="Replace", 
+        font=("Arial Black", 17, "bold"),
+        fg_color='transparent',
+    )
+    replace_label.pack(side=ctk.TOP, expand=False, fill = ctk.X, pady=7, padx= 7)
+
+    setting_icon = ctk.CTkImage(
+        light_image = Image.open('./resources/icons/setting.png'),
+        dark_image = Image.open('./resources/icons/setting.png'),
+        size=(20, 20)
+    )
+    setting_label = ctk.CTkLabel(
+        kv_deleteframe,
+        text="", 
+        font=("Arial", 12, "bold"),
+        fg_color='transparent',
+        image=setting_icon
+    )
+
+    setting_label.pack(side=ctk.TOP, expand=False, fill = ctk.X, pady=7, padx= 7)
+
     key_frame.pack(side=ctk.LEFT, expand=True, fill=ctk.BOTH, padx=5)
     value_frame.pack(side=ctk.LEFT, expand=True, fill=ctk.BOTH, padx=5)
-    kv_deleteframe.pack(side=ctk.LEFT, expand=True, fill=ctk.BOTH, padx=5)
+    kv_deleteframe.pack(side=ctk.LEFT, expand=False, fill=ctk.BOTH, padx=5)
     keywordlist_scroll.pack(side=ctk.TOP, expand=True, fill=ctk.BOTH, padx=5, pady=5)
+    keyword_frame.pack(side=ctk.LEFT, expand=True, fill=ctk.X, padx=5, pady=0)
+    button_frame.pack(side=ctk.LEFT, anchor='nw',expand=False, fill=ctk.BOTH, padx=5, pady=30)
 
-    if not root.frame_height < 829:
-        keyword_frame.pack(side=ctk.TOP, expand=True, fill=ctk.X, padx=20, pady=5)
-        button_frame.pack(side=ctk.TOP, anchor='nw',expand=True, fill=ctk.BOTH, padx=30, pady=5)
-    else:
-        keyword_frame.pack(side=ctk.LEFT, expand=True, fill=ctk.X, padx=5, pady=0)
-        button_frame.pack(side=ctk.LEFT, anchor='nw',expand=True, fill=ctk.BOTH, padx=5, pady=30)
 
     keyword_setting_section.pack(side=ctk.LEFT, expand=True, fill=ctk.BOTH)
 
-    """ K E Y B I N D S """
-
-    # Edit / Save
     root.bind("<Control-e>", lambda e: kvpair_edit_mode())
     root.bind("<Control-E>", lambda e: kvpair_edit_mode())
     root.bind("<Control-s>", lambda e: kvpair_edit_mode())
     root.bind("<Control-S>", lambda e: kvpair_edit_mode())
     root.bind("<Return>", lambda e: kvpair_edit_mode())
 
-    # Clear
     root.bind("<Control-c>", lambda e: clear_all_kvPairs())
     root.bind("<Control-C>", lambda e: clear_all_kvPairs())
 
-    # Add
     root.bind("<Control-a>", lambda e: kv_addEntry())
     root.bind("<Control-A>", lambda e: kv_addEntry())
     root.bind("<Control-+>", lambda e: kv_addEntry())
     root.bind("<Control-=>", lambda e: kv_addEntry())
 
-    # Scroll
     root.bind("<Down>", lambda e: scroll_to_bottom())
     root.bind("<Up>", lambda e: scroll_to_top())
 
-    # Globalize         0           1             2             3             4
     var_editMode = [key_frame, value_frame, kwScrollWidth, edit_button, kv_deleteframe]
 
     default_values = ['N A M E', 'H O N O R', 'Q U A R T E R']
 
     for i in range(3):
-
-        # VALUE
         value_Label = ctk.CTkLabel(
             value_frame,
             text=default_values[i], 
@@ -366,7 +339,6 @@ def keyword_setting_section(master):
         value_Label.pack(side=ctk.TOP, pady=5, padx=5)
 
         if not back_page:
-            # KEY
             key_entry = ctk.CTkEntry(
                 key_frame,
                 border_color= 'lightblue',
@@ -392,18 +364,12 @@ def keyword_setting_section(master):
         output_directory = False
         kvpair_edit_mode()
 
-
-
-""" __________________ Key-Value Pair Section __________________ """
-
-# Name/Honor/Quarter takes 1,2,3 ID
 kvedit_mode = True
 add_on = False
 
 def kvpair_edit_mode():
     global var_editMode, kvPair_widget, kvedit_mode, kvpairLabels, root, add_on
 
-    # Checks if there are empty fields
     for pair in kvPair_widget:
         key = pair[0].get()
         value = pair[1].get()
@@ -412,16 +378,13 @@ def kvpair_edit_mode():
             glo_errorLabel.configure(text="Can't save empty fields")
             return 
 
-    # BUTTON TOGGLE
     if kvedit_mode or add_on: 
-        # STATE: 'save'
         kvedit_mode = False
         add_on = False
         glo_errorLabel.configure(text=". . . SAVING . . .")
         kvpair_save_edit()
 
     else: 
-        # STATE: 'edit'
         kvedit_mode = True
         var_editMode[4].pack(side=ctk.LEFT, expand=True, fill=ctk.BOTH, padx=5)
         var_editMode[4].after(100, kv_load_Entries)
@@ -471,7 +434,6 @@ def kv_addEntry():
 
     kvscroll_Frame.after(100, scroll_to_bottom)
 
-    # Allows cursor switching
     key_entry.bind("<Tab>", lambda e: focus_next_entry(e, value_entry))
     value_entry.bind("<Tab>", lambda e: focus_next_entry(e, key_entry))
 
@@ -479,8 +441,6 @@ def kv_addEntry():
 
     for i, btn in enumerate(kv_delete_btn):
         btn.configure(command = lambda i=i: kv_load_Entries([True, i]))
-
-
 
 def focus_next_entry(event, next_widget):
     next_widget.focus_set()
@@ -497,7 +457,6 @@ def scroll_to_top():
 def is_visible(widget):
     return widget.winfo_ismapped()
 
-
 def delete_entry(delete_pair):
     global kvPair_widget, kv_delete_btn, var_editMode, kvpairLabels, delete_btn, add_on, var_add_forDelete
 
@@ -513,13 +472,11 @@ def delete_entry(delete_pair):
     delete_btn = []
     kv_delete_btn = []
 
-    # convert Label into Widget
     for i, pair in enumerate(kvPair_widget):
         
         pair[0].pack(side=ctk.TOP , pady=5, padx=10, fill=ctk.X)
         pair[1].pack(side=ctk.TOP , pady=5, padx=10, fill=ctk.X)
 
-        # DELETE BUTTON
         delete_btn = ctk.CTkButton(
             var_editMode[4], 
             text='X', 
@@ -529,11 +486,8 @@ def delete_entry(delete_pair):
         )
         delete_btn.pack(side=ctk.TOP , pady=5, padx=10, fill=ctk.X)
         
-        # PARSE
         kv_delete_btn.append(delete_btn)
         kvpairLabels = []
-
-
 
 def kv_load_Entries(delete_pair = [False]):
     global var_editMode, kvPair_widget, kvedit_mode, kvpairLabels, kv_delete_btn, root, key_value_pairs
@@ -542,7 +496,6 @@ def kv_load_Entries(delete_pair = [False]):
         text="Save"
     )
 
-    # DELETE
     if delete_pair[0]:  
         delete_entry(delete_pair)
         return
@@ -553,34 +506,29 @@ def kv_load_Entries(delete_pair = [False]):
     kv_delete_btn = []
     kvPair_widget = []
 
-    # convert Label into Widget
     for i, pair in enumerate(kvpairLabels):
 
-        # SETUP
         pair[0].pack_forget()
         pair[1].pack_forget()
 
         key = pair[0].cget("text")
         value = pair[1].cget("text")
 
-        # KEY
         key_entry = ctk.CTkEntry(
             var_editMode[0], 
             width=int(var_editMode[2] * 0.5) - 10
         )
         key_entry.pack(side=ctk.TOP, pady=5, padx=10, fill=ctk.X)
 
-        key_entry.insert(0, key) # Text
+        key_entry.insert(0, key) 
         
-        # VALUE
         value_entry = ctk.CTkEntry(
             var_editMode[1], 
             width=int(var_editMode[2] * 0.5) - 10
         )
         value_entry.pack(side=ctk.TOP , pady=5, padx=10, fill=ctk.X)
-        value_entry.insert(0, value) # Text
+        value_entry.insert(0, value) 
 
-        # DELETE BUTTON
         delete_btn = ctk.CTkButton(
             var_editMode[4], 
             text='X', 
@@ -590,7 +538,6 @@ def kv_load_Entries(delete_pair = [False]):
         )
         delete_btn.pack(side=ctk.TOP , pady=5, padx=10, fill=ctk.X)
         
-        # PARSE
         kv_delete_btn.append(delete_btn)
         kvPair_widget.append([key_entry, value_entry])
         kvpairLabels = []
@@ -598,20 +545,9 @@ def kv_load_Entries(delete_pair = [False]):
     if len(kvPair_widget):
         kvPair_widget[0][0].focus_set()
 
-    
-
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-
-         0           1             2             3             4
-    [key_frame, value_frame, kwScrollWidth, edit_button, kv_deleteframe]
-
-
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-
 def kvpair_save_edit():
     global var_editMode, disabled_labels, key_pre_determine, predeter_keyLabels, disable_list, default_keys, pre_determine_var, key_value_pairs, kvedit_mode, kvPair_widget, kvpairLabels, kv_delete_btn, root
 
-    # START
     var_editMode[3].configure(
         text="Edit"
     )
@@ -626,7 +562,6 @@ def kvpair_save_edit():
         pair[0].pack_forget()
         
         if not disable_list[i]:
-            # DISABLED KEY
             key_Label = ctk.CTkLabel(
                 var_editMode[0], 
                 text= pair[0].get(),
@@ -634,7 +569,6 @@ def kvpair_save_edit():
                 width=int(var_editMode[2] * 0.5) - 10
             )
         else:
-            # KEY
             key_Label = ctk.CTkLabel(
                 var_editMode[0], 
                 text= pair[0].get(),
@@ -655,16 +589,13 @@ def kvpair_save_edit():
 
     key_value_pairs.append(key_pre_determine)
     
-    # Convert Entry to Label
     for i, pair in enumerate(kvPair_widget):
 
-        # SETUP
         pair[0].pack_forget()
         pair[1].pack_forget()
         key = pair[0].get()
         value = pair[1].get()
 
-        # KEY
         key_Label = ctk.CTkLabel(
             var_editMode[0], 
             text= key,
@@ -672,7 +603,6 @@ def kvpair_save_edit():
         )
         key_Label.pack(side=ctk.TOP, pady=5, padx=5)
 
-        # VALUE
         value_Label = ctk.CTkLabel(
             var_editMode[1],
             text=value, 
@@ -680,7 +610,6 @@ def kvpair_save_edit():
         )
         value_Label.pack(side=ctk.TOP, pady=5, padx=5)
 
-        # PARSE
         kvpairLabels.append([key_Label, value_Label])
 
         key_value_pairs.append([key, value])
@@ -691,7 +620,6 @@ def kvpair_save_edit():
     change_preview_image_thread()
     kv_delete_btn = []
     var_editMode[4].pack_forget()
-
 
 def pre_determine_kvpairs():
     global var_editMode, saved_disabledText, pre_determine_var, default_keys, predeter_keyLabels, disabled_labels, disable_list, key_value_pairs, key_pre_determine
@@ -712,7 +640,6 @@ def pre_determine_kvpairs():
 
     for i in range(3):
 
-        # KEY
         if not disable_list[i]:
             key_entry = ctk.CTkEntry(
                 var_editMode[0],
@@ -737,7 +664,6 @@ def pre_determine_kvpairs():
 
         key_entry.pack(side=ctk.TOP, pady=5, padx=10, fill=ctk.X)
 
-        # DISABLE BUTTON
         if not disable_list[i]:
             disable_btn = ctk.CTkButton(
                 var_editMode[4], 
@@ -789,17 +715,7 @@ def disable_keyWord(i):
         )
         entry.delete(0, ctk.END)
         entry.insert(0, saved_disabledText[i])
-    
 
-
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-
-         0           1             2              3
-    [key_frame, value_frame, kwScrollWidth, edit_button]
-
-
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-    
 def clear_all_kvPairs(goBack = False):
     global var_editMode, key_value_pairs, disabled_labels, toggle_disable, disable_dict, predeter_keyLabels, default_keys, key_value_pairs, kvedit_mode, kvPair_widget, kvpairLabels, kv_delete_btn, root, input_file, inputFile_name
     if goBack or messagebox.askokcancel("Confirm", "Are you sure you want to clear all pairs?"):
@@ -836,33 +752,31 @@ def clear_all_kvPairs(goBack = False):
 
         kvpair_save_edit()
 
-# ___________________ Format Section ___________________
 
 fileLabel_format = 'config'
 image_checkbox_var = 'config'
 pdf_checkbox_var = 'config'
 docx_checkbox_var = 'config'
+
 def format_setting_section(master):
     global fileLabel_format, output_types, image_checkbox_var, pdf_checkbox_var, docx_checkbox_var, img_progress, pdf_progress, docx_progress, root
     
     format_output_section = ctk.CTkFrame(
         master,
-        fg_color=("#ffffff", "#2986cc"),  # White to blue gradient
+        fg_color=("#ffffff", "#2986cc"),  
         width=frame_width // 2, 
         height=int(frame_height * 0.4),
         corner_radius=0,
         border_width=0.5,
-        border_color="#999999"  # Gray border
+        border_color="#999999"  
     )
 
-    # Top section for checkboxes and progress bars
     top_section = ctk.CTkFrame(
         format_output_section,
         fg_color="transparent"
     )
     top_section.pack(side=ctk.TOP, fill=ctk.BOTH, expand=True)
 
-    # Format settings label (only show if window height allows)
     if root.frame_height >= 830:
         Format_settings_label = ctk.CTkLabel(
             top_section, 
@@ -870,7 +784,6 @@ def format_setting_section(master):
         )
         Format_settings_label.pack(side=ctk.TOP, pady=5)
 
-    # Frames for each format type
     docxFrame = ctk.CTkFrame(
         top_section,
         fg_color="transparent"
@@ -889,7 +802,6 @@ def format_setting_section(master):
     )
     imgFrame.pack(side=ctk.TOP, fill=ctk.BOTH, padx=10, pady=2)
 
-    # CHECKBOXES
     image_checkbox_var = ctk.StringVar()
     image_checkbox = ctk.CTkCheckBox(
         imgFrame, 
@@ -923,7 +835,6 @@ def format_setting_section(master):
     )
     docx_checkbox.pack(side=ctk.TOP, anchor='w', padx=5, pady=4)
 
-    # Progress bars
     img_progress = ctk.CTkProgressBar(imgFrame, fg_color='lightblue')
     img_progress.set(0)
     img_progress.pack(side=ctk.TOP, fill=ctk.X, padx=5, pady=4)
@@ -938,17 +849,8 @@ def format_setting_section(master):
 
     update_output_types()
 
-    # Bottom section for publish button
-    bottom_section = ctk.CTkFrame(
-        format_output_section, 
-        fg_color="transparent",
-        height=60  # Fixed height for button section
-    )
-    bottom_section.pack(side=ctk.BOTTOM, fill=ctk.X, padx=10, pady=5)
-    bottom_section.pack_propagate(False)  # Prevent shrinking
-
     publish_btn = wg.newButton(
-        bottom_section,
+        top_section,
         text = 'Publish',
         fg_color = colors['matte_black'],
         text_color = "white",
@@ -958,12 +860,11 @@ def format_setting_section(master):
     )
     publish_btn.pack(side=ctk.TOP, expand=True,pady=5)
 
-    format_output_section.pack(side=ctk.LEFT, expand=True, fill=ctk.BOTH)
+    format_output_section.pack(side=ctk.LEFT, fill=ctk.BOTH)
 
 def publish_certificates_thread():
     global output_directory, glo_errorLabel
 
-    # CHECK IF THERES NOTHING CHECKED WHEN TRYING TO PUBLISH
     if len(output_types) == 0:
         return  glo_errorLabel.configure(text="No output format selected")
 
@@ -979,16 +880,12 @@ def publish_certificates_thread():
     pdf_progress.set(0.1)
     docx_progress.set(0.1)
     threading.Thread(target=add_to_output_directory).start()
-    
 
-# SET THE OUTPUT TYPES
 def update_output_types():
     global output_types, image_checkbox_var, pdf_checkbox_var, docx_checkbox_var, img_progress, pdf_progress, docx_progress
 
-    # Clear the list
     output_types.clear()
 
-    # Check the state of each checkbox and update the list
     if image_checkbox_var.get():
         output_types.append("IMG")
         img_progress.configure(progress_color='blue')
@@ -1007,19 +904,14 @@ def update_output_types():
     else:
         docx_progress.configure(progress_color='gray')
 
-
-# SAVE DIRECTORY
 def open_file_dialog():
     global output_directory, fileLabel_format
 
     output_directory = filedialog.askdirectory()
 
-
-# COPY THE FILES
 def add_to_output_directory():
     global output_directory, reg_names, inputFile_name, img_progress, pdf_progress, docx_progress
     
-    # Reset progress bars
     if "IMG" in output_types:
         img_progress.set(0)
         img_progress.pack(side=ctk.TOP, fill=ctk.X, padx=5, pady=5)
@@ -1041,40 +933,33 @@ def add_to_output_directory():
         destination_path = f"{base_destination_path}_{counter}"
         counter += 1
     try:
-        # Copy directory
         copytree(source_directory, destination_path)
         glo_errorLabel.configure(text="Certificates published successfully")
 
-        # Delete public folder
         rmtree(source_directory)
     except Exception as e:
         glo_errorLabel.configure(text="Error publishing certificates")
 
-
 preview_image_frame = 'config'
 prvFram_height = 'config'
-
-# ____________________ Preview File ____________________
 
 def prev_section():
     global preview_image_frame, frame_width, prvFram_height, edit_section_frame
 
-    prvFram_height = int(frame_height * 0.6)
+    prvFram_height = int(frame_height * 0.57)
 
     previewFrame = ctk.CTkFrame(
         edit_section_frame,
         width = frame_width,
-        height = prvFram_height,
         fg_color= colors['pale_white'],
         corner_radius=0   
     )
 
-    setPreview_image()
+    setPreview_image(False, previewFrame)
+    previewFrame.pack(side=ctk.TOP, expand = True, fill=ctk.BOTH)
 
-    previewFrame.pack(side=ctk.TOP, expand=True, fill=ctk.BOTH)
     return previewFrame
 
-# Reload the template Image
 stop_event = threading.Event()
 lock = threading.Lock()
 
@@ -1093,7 +978,6 @@ def change_preview_image():
 def change_preview_image_thread():
     global stop_event, lock
 
-    # ONLY RUNS THE MOST RECENT THREAD
     stop_event.set()
     stop_event = threading.Event()
 
@@ -1112,16 +996,12 @@ def change_preview_image_thread():
             if lock_acquired:
                 lock.release()
     
-    # STARTS A NEW THREAD
     threading.Thread(target=thread_target).start()
 
-
-# Add prev-image
 preview_image_show = 'config'
-def setPreview_image(new_path = False):
-    global preview_image_frame, preview_image_show, img_name, prvFram_height, edit_section_frame, frame_width
+def setPreview_image(new_path = False, framee = None):
+    global preview_image_frame, preview_image_show, img_name, prvFram_height, edit_section_frame, frame_width, frame_height
     
-    # CHANGING THE IMAGE
     if new_path:
         img_path = new_path
 
@@ -1131,19 +1011,18 @@ def setPreview_image(new_path = False):
             original_width, original_height = light_img.size 
 
             image_aspect_ratio = original_width / original_height 
-            frame_aspect_ratio = frame_width / prvFram_height 
+            frame_aspect_ratio = frame_width / (prvFram_height) 
             
             if image_aspect_ratio > frame_aspect_ratio: 
-                new_width = frame_width 
-                new_height = int(frame_width / image_aspect_ratio) 
+                new_width = int(frame_width)
+                new_height = int(frame_width / image_aspect_ratio)
             else:
-                new_height = prvFram_height 
-                new_width = int(prvFram_height * image_aspect_ratio) 
+                new_height = int(prvFram_height)
+                new_width = int(prvFram_height * image_aspect_ratio)
             
-            # RESIZED IMAGE
             resized_image = light_img.resize((new_width, new_height), Image.Resampling.LANCZOS)
 
-            # ORIGINAL IMAGE
+            print(prvFram_height)
             template_image = ctk.CTkImage( 
                 light_image= resized_image, 
                 size= resized_image.size
@@ -1158,8 +1037,6 @@ def setPreview_image(new_path = False):
 
         return
 
-
-    # ADD STARTING IMAGE
     img_path = join(getcwd(), 'temporary', img_name) 
 
     try:
@@ -1171,27 +1048,26 @@ def setPreview_image(new_path = False):
         frame_aspect_ratio = frame_width / prvFram_height 
         
         if image_aspect_ratio > frame_aspect_ratio: 
-            new_width = frame_width 
-            new_height = int(frame_width / image_aspect_ratio) 
+            new_width = frame_width
+            new_height = int(frame_width / image_aspect_ratio ) 
         else:
             new_height = prvFram_height 
             new_width = int(prvFram_height * image_aspect_ratio) 
         
-        # RESIZED IMAGE
         resized_image = light_img.resize((new_width, new_height), Image.Resampling.LANCZOS)
 
-        # ORIGINAL IMAGE
         template_image = ctk.CTkImage( 
             light_image= resized_image, 
             size= resized_image.size
         )
 
+        print(f'Image Width: {new_width}, Image Height: {new_height}')
         showImage = ctk.CTkLabel(
-            edit_section_frame,
-            image= template_image,
-            text=''
+            framee,
+            image = template_image,
+            text=""
         )
-        showImage.pack(expand=True, fill=ctk.BOTH)
+        showImage.pack(side=ctk.TOP, expand=True, fill=ctk.BOTH)
         preview_image_show = showImage
 
     except FileNotFoundError:
@@ -1212,7 +1088,6 @@ def goBack_regPage():
     register_page.pack(expand=True, fill=ctk.BOTH)
     main_preview_page.pack_forget()
 
-    # Reset key-value pairs to only have pre-determined labels
     disable_list = [True, True, True]
     clear_all_kvPairs(True)
 

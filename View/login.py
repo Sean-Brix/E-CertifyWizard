@@ -6,15 +6,34 @@ from View.register import registerStudents
 from View.Controller.help import open_controls_page
 from PIL import Image
 
+
 def validate_credentials(username, password):
-    # Check if username starts with letter and contains no special characters
-    if not username[0].isalpha() or not re.match("^[a-zA-Z0-9]*$", username):
-        return False, "Username must start with a letter and contain no special characters"
-    
+    # Username validation
+    if len(username) < 5:
+        return False, "Username must be at least 5 characters long"
+    if not username[0].isalpha():
+        return False, "Username must start with a letter"
+    if not re.match("^[a-zA-Z0-9]*$", username):
+        return False, "Username must only contain letters and numbers"
+    if ' ' in username:
+        return False, "Username cannot contain spaces"
+    if not any(c.isdigit() for c in username):
+        return False, "Username must contain at least one number"
+
+    # Password validation  
+    if len(password) < 5:
+        return False, "Password must be at least 5 characters long"
+    if not any(c.isupper() for c in password):
+        return False, "Password must contain at least one uppercase letter"
+    if not any(c.islower() for c in password):
+        return False, "Password must contain at least one lowercase letter"
+    if not any(c.isdigit() for c in password):
+        return False, "Password must contain at least one number"
     if not re.match("^[a-zA-Z0-9]*$", password):
-        return False, "Password must not contain special characters"
-    
+        return False, "Password must only contain letters and numbers"
+
     return True, "Valid credentials"
+
 
 def check_existing_username(username):
     if not os.path.exists("account/username.txt"):
@@ -23,6 +42,7 @@ def check_existing_username(username):
     with open("account/username.txt", "r") as file:
         usernames = file.read().splitlines()
         return username in usernames
+    
 
 def verify_login(username, password):
     if not os.path.exists("account/username.txt") or not os.path.exists("account/password.txt"):
@@ -38,12 +58,15 @@ def verify_login(username, password):
         except ValueError:
             return False
 
+
 def save_credentials(username, password):
     os.makedirs("account", exist_ok=True)
     
     with open("account/username.txt", "a") as ufile, open("account/password.txt", "a") as pfile:
         ufile.write(f"{username}\n")
         pfile.write(f"{password}\n")
+
+
 
 def handle_register(master):
     # Hide the main window when the register window is opened
@@ -101,6 +124,8 @@ def handle_register(master):
         if check_existing_username(username):
             messagebox.showerror("Error", "Username already exists")
             return
+        
+
         
         save_credentials(username, password)
         messagebox.showinfo("Success", "Registration successful!")
@@ -162,12 +187,28 @@ def handle_register(master):
     username_entry.pack(pady=10, padx=50)
 
     password_entry = ctk.CTkEntry(
-        register_frame, 
+        register_frame,
         show="*",
         placeholder_text="Password",
         width=230
     )
-    password_entry.pack(pady=(10, 0), padx=50)
+    password_entry.pack(pady=10, padx=50)
+
+    def toggle_password():
+        if show_password.get():
+            password_entry.configure(show='')
+        else:
+            password_entry.configure(show='*')
+
+    show_password = ctk.CTkCheckBox(
+        register_frame,
+        checkbox_width=17,
+        checkbox_height=17,
+        text="Show password", 
+        command=toggle_password,
+        text_color="#E0E0E0"
+    )
+    show_password.pack(pady=3, anchor="w", padx=50)
     
     register_button = ctk.CTkButton(
         register_frame, 
@@ -186,6 +227,8 @@ def handle_register(master):
 
     # Bind Enter key to verify and register functions
     register_window.bind('<Return>', lambda event: verify_button.invoke() if app_code_frame.winfo_ismapped() else register_button.invoke())
+
+
 
 def open_controls_page(master):
     controls_window = ctk.CTkToplevel()
@@ -279,6 +322,7 @@ def open_controls_page(master):
     y = (screen_height - 800) // 2
     controls_window.geometry(f"900x800+{x}+{y}")
 
+
 def open_login_page(master):
 
     loginWindow = ctk.CTkFrame(
@@ -302,7 +346,7 @@ def open_login_page(master):
     
     ctk.CTkLabel(
         login_frame, 
-        text="Log into your Account", 
+        text="Enter Access Code", 
         font=('Century Gothic', 20),
         text_color="#E0E0E0"
     ).pack(pady=(45, 20))
@@ -313,15 +357,29 @@ def open_login_page(master):
         width=230
     )
     username_entry.pack(pady=10, padx=40)
-    
     password_entry = ctk.CTkEntry(
         login_frame, 
         placeholder_text="Password", 
         show="*",
         width=230
     )
-    password_entry.pack(pady=(10, 0), padx=40)
-    
+    password_entry.pack(pady=10, padx=40)
+
+    def toggle_password():
+        if show_password.get():
+            password_entry.configure(show='')
+        else:
+            password_entry.configure(show='*')
+
+    show_password = ctk.CTkCheckBox(
+        login_frame,
+        checkbox_width=17, 
+        checkbox_height=17,
+        text="Show password",
+        command=toggle_password,
+        text_color="#E0E0E0"
+    )
+    show_password.pack(pady=3, anchor="w", padx=40)
     
     def set_fullscreen(event=None):
         master.state('zoomed')
@@ -331,6 +389,9 @@ def open_login_page(master):
         master.attributes('-fullscreen', False)
 
     def login():
+        
+        print(f"Frame Width: {master.winfo_width()}, Frame Height: {master.winfo_height()}")
+
         username = username_entry.get()
         password = password_entry.get()
         
@@ -338,8 +399,10 @@ def open_login_page(master):
             vp_width = master.winfo_screenwidth()
             vp_height = master.winfo_screenheight()
 
-            min_width = 1120 
-            min_height = 830
+            min_width = 0 
+            min_height = 0
+            # min_width = 1120 
+            # min_height = 830
 
             if vp_width < min_width:
                 frame_width = vp_width
@@ -392,12 +455,12 @@ def open_login_page(master):
 
     register_label = ctk.CTkLabel(
         login_frame, 
-        text="Register Account", 
+        text="Register Code", 
         font=('Century Gothic', 12, "underline"),
         text_color="lightgray",
         cursor="hand2"
     )
-    register_label.pack(pady=(0, 5), anchor="e", padx=48)
+    register_label.pack(pady=(20, 5), anchor="w", padx=48)
     register_label.bind("<Button-1>", lambda e: handle_register(master))
     register_label.bind("<Enter>", on_register_hover)
     register_label.bind("<Leave>", on_register_leave)

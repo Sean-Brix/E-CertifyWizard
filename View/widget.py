@@ -13,7 +13,6 @@ font = {
     'first':("Helvetica", 25)
 }
 
-# Button
 def newButton(master: ctk.CTkFrame, **kwargs):
     kwargs.setdefault('text', 'Default Text')
     kwargs.setdefault('width', 20)
@@ -25,7 +24,6 @@ def newButton(master: ctk.CTkFrame, **kwargs):
     newButton = ctk.CTkButton(master, **kwargs)
     return newButton
 
-# Text
 def newText(master: ctk.CTkFrame, **kwargs):
     kwargs.setdefault('width', 50)
     kwargs.setdefault('height', 3)
@@ -34,7 +32,6 @@ def newText(master: ctk.CTkFrame, **kwargs):
     newText = ctk.CTkTextbox(master, **kwargs)
     return newText
 
-# Entries
 def newEntry(master: ctk.CTkFrame, **kwargs):
     kwargs.setdefault('width', 10)
     kwargs.setdefault('font',  font['first'])
@@ -42,14 +39,12 @@ def newEntry(master: ctk.CTkFrame, **kwargs):
     newEntry = ctk.CTkEntry(master, **kwargs)
     return newEntry
 
-# Line
 def n_br_(master, orientation = 'vertical', pad_y = 0, pad_x = 0, **kwargs):
     kwargs.setdefault('fg_color', colors['matte_black'])
     kwargs.setdefault('border_color', colors['matte_black'])
     kwargs.setdefault('corner_radius', 5)
     kwargs.setdefault('width', 2)
     kwargs.setdefault('height', 2)
-
 
     line = ctk.CTkFrame(master, **kwargs)
 
@@ -63,4 +58,3 @@ def n_br_(master, orientation = 'vertical', pad_y = 0, pad_x = 0, **kwargs):
     
     return line
 
-    

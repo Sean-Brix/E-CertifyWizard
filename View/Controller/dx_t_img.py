@@ -20,6 +20,7 @@ def is_word_installed():
     except Exception:
         return False
 
+
 def convert_docx_to_pdf(input_path, output_path):
     try:
         CoInitialize()
@@ -51,6 +52,7 @@ def convert_docx_to_pdf(input_path, output_path):
             logging.error(f"All conversion methods failed: {e}")
             raise
 
+
 def convert_dtimg(file_path):
     try:
         image_path = None
@@ -67,6 +69,7 @@ def convert_dtimg(file_path):
         return
 
     return image_path
+
 
 def convert_one_img(name, input_filename, keyValue_pairs = [['[name]', '[honor]', '[quarter]']]):
     try:

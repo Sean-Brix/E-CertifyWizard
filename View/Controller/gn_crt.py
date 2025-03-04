@@ -19,10 +19,14 @@ poppler_path = join(getcwd(), 'poppler_bin', 'Release', 'poppler', 'Library', 'b
 def update_progress_bar(progress_bar, value):
     progress_bar.set(value)
 
+
+
 def should_use_threading():
     cpu_usage = psutil.cpu_percent(interval=1)
     memory_info = psutil.virtual_memory()
     return cpu_usage < 50 and memory_info.available > (memory_info.total * 0.5)
+
+
 
 def convert_docx_to_pdf(input_path, output_path):
     try:
@@ -32,7 +36,7 @@ def convert_docx_to_pdf(input_path, output_path):
         word.Visible = False
         try:
             doc = word.Documents.Open(abspath(input_path))
-            doc.SaveAs(abspath(output_path), FileFormat=17)  # 17 = PDF format
+            doc.SaveAs(abspath(output_path), FileFormat=17)
             doc.Close()
             return True
         finally:
@@ -54,6 +58,7 @@ def convert_docx_to_pdf(input_path, output_path):
         except Exception as e:
             logging.error(f"All conversion methods failed: {e}")
             raise
+
 
 # Generate All Certificate
 def generate_certificate(reg_name: list, filename: str, output_type: list, keyValue_pairs: list):
@@ -143,6 +148,7 @@ def generate_certificate(reg_name: list, filename: str, output_type: list, keyVa
     except Exception as e:
         print(f'Error saving file: {e}')
         return
+    
 
 def convert_documents_threading(docxFolder, pdfFolder, imgFolder, output_type, total_files):
     from View.preview import img_progress, pdf_progress
@@ -264,6 +270,7 @@ def convert_documents_batch(docxFolder, pdfFolder, imgFolder, output_type, total
         print(f'Successful\n')
 
     merge_pdfs(pdfFolder, pdf_files, output_type)
+
 
 def merge_pdfs(pdfFolder, pdf_files, output_type, docxFolder=None, imgFolder=None):
     from View.preview import img_progress

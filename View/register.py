@@ -41,6 +41,8 @@ glo_clearAllButton = 'config'
 glo_listFrame = 'config'
 registerButton = 'config'
 
+iter = 1  # Initialize iter as an integer
+
 colors = {
         'matte_black': '#2B2B2A',
         'pale_white': '#f5f5f5',
@@ -52,9 +54,6 @@ colors = {
         'matte_red': 'Firebrick',
 }
 
-
-""" ~~~~~~~~~ DECORATORS ~~~~~~~~~ """
-
 def bind_sidebar_toggle(func):
     global is_sidebar_visible
 
@@ -63,14 +62,9 @@ def bind_sidebar_toggle(func):
         return func(*args, **kwargs)
     return wrapper
 
-
-""" ~~~~~~~~~ MAIN WIDGETS ~~~~~~~~~ """
-
 def registerStudents(master, frame_width, frame_height):
     global root, main_register, frameWidth, frameHeight
 
-    print("Register Page - Initializing")
-    
     mainFrame = ctk.CTkFrame(
         master,
         width = frame_width,
@@ -78,19 +72,19 @@ def registerStudents(master, frame_width, frame_height):
         fg_color = colors['pale_white']
     )
 
-    # Globalize Root Config
     main_register = mainFrame
     frameWidth = frame_width
     frameHeight = frame_height
     root = master
 
-    sideBar(mainFrame, frame_width, frame_height, master)  # Pass master to sideBar
+    print("Register Page - Initializing")
+    print(f"Frame Width: {main_register.winfo_width()}, Frame Height: {main_register.winfo_height()}")
+
+    sideBar(mainFrame, frame_width, frame_height, master)
     nameSection(mainFrame, frame_width, frame_height, master)
     mainFrame.pack(expand=True, fill=ctk.BOTH)
 
     print("Register page - rendered")
-
-# _______________________________________________ NAME SECTION FUNCTIONS _______________________________________________ 
 
 def nameSection(master, frame_width, frame_height, root):
     global glo_clearAllButton, registerButton, glo_listFrame, glo_regline, glo_nameline, glo_selectline, glo_selectionBox, glo_quarterBox, glo_editline, glo_errorLabel, glo_getName
@@ -106,14 +100,15 @@ def nameSection(master, frame_width, frame_height, root):
 
     create_template_sidebar(nameSection, colors['matte_black'], colors['pale_white'])
 
-    # Display Name within the scrollable frame
+    frame_height = main_register.winfo_height()
+    listframe_height = int(frame_height * 0.5)
+
     listFrame = ctk.CTkScrollableFrame(
         nameSection,
         width=section_width,
-        height=int(frame_height * 0.5)
+        height=listframe_height
     )
 
-    # frame bar, top of the listFrame
     topBarFrame = ctk.CTkFrame(
         listFrame,
         width=section_width,
@@ -122,7 +117,6 @@ def nameSection(master, frame_width, frame_height, root):
     )
     topBarFrame.pack(side=ctk.TOP, fill=ctk.X)
 
-    # "Clear All" button
     clearAllButton = ctk.CTkButton(
         topBarFrame,
         width=150,
@@ -132,7 +126,6 @@ def nameSection(master, frame_width, frame_height, root):
         command=lambda: delete_regName(clear_all=True),
     )
 
-    # Register Option
     optionFrame = ctk.CTkFrame(
         nameSection,
         width=frame_width,
@@ -140,14 +133,11 @@ def nameSection(master, frame_width, frame_height, root):
         fg_color= colors['pale_white']
     )
 
-
-    # ComboBox container
     dropDownFrames = ctk.CTkFrame(
         optionFrame, 
         width=400, 
         height=150, 
         fg_color= colors['pale_white']
-        
     ) 
     
     labelFrame = ctk.CTkFrame(
@@ -157,7 +147,6 @@ def nameSection(master, frame_width, frame_height, root):
         fg_color= colors['pale_white']
     ) 
 
-    # label
     selectionLabel = ctk.CTkLabel(
         labelFrame,
         text= "Honor :",
@@ -166,7 +155,6 @@ def nameSection(master, frame_width, frame_height, root):
         justify="left"
     )
     
-
     quarterLabel = ctk.CTkLabel(
         labelFrame,
         text= "Quarter :",
@@ -175,19 +163,16 @@ def nameSection(master, frame_width, frame_height, root):
         justify="left"
     )
     
-    selectionLabel.pack(side=ctk.LEFT, padx=20, expand = True, fill=ctk.BOTH)
-    quarterLabel.pack(side=ctk.LEFT, padx=20, expand = True, fill=ctk.BOTH)
+    selectionLabel.pack(side=ctk.LEFT, padx=20, expand = True, fill=ctk.X)
+    quarterLabel.pack(side=ctk.LEFT, padx=20, expand = True, fill=ctk.X)
+    labelFrame.pack(side=ctk.TOP, expand=False, fill=ctk.X)
 
-    if not root.frame_height <= 830:
-        labelFrame.pack(side=ctk.TOP, expand=True, fill=ctk.X)
-
-    # Dropdown
     selectionBox = ctk.CTkComboBox(
         dropDownFrames, 
         values=[
             "With Honors", 
-            "With High", 
-            "With Highest",
+            "With High Honors", 
+            "With Highest Honors",
         ],
         width=200,
         command= lambda e: close_sidebar_asClicked()
@@ -209,7 +194,6 @@ def nameSection(master, frame_width, frame_height, root):
     quarterBox.bind("<Button-1>", lambda e: close_sidebar_asClicked())
     quarterBox.pack(side=ctk.RIGHT, pady=10, padx=50, expand=True, fill=ctk.X) 
 
-    # Text/Button Register Name
     regFrame = ctk.CTkFrame(
         optionFrame, 
         fg_color= "#f5f5f5"
@@ -222,7 +206,6 @@ def nameSection(master, frame_width, frame_height, root):
         fg_color= colors['pale_white']
     ) 
 
-    # label
     textInputLabel = ctk.CTkLabel(
         textLabelFrame,
         text= "Name :",
@@ -232,14 +215,12 @@ def nameSection(master, frame_width, frame_height, root):
     )
     textInputLabel.pack(side=ctk.LEFT, padx=20, pady= 20, fill=ctk.BOTH)
 
-    # Create tooltip frame with border
     tooltip_frame = ctk.CTkFrame(
         textLabelFrame,
         fg_color=colors['gray'],
         corner_radius=4
     )
     
-    # Create tooltip label inside frame
     file_tooltip = ctk.CTkLabel(
         tooltip_frame,
         text="Register a list of name in text file",
@@ -261,7 +242,6 @@ def nameSection(master, frame_width, frame_height, root):
         command = lambda: name_list_dialog()
     )
 
-    # Bind hover events
     file_button.bind('<Enter>', lambda e: show_file_tooltip())
     file_button.bind('<Leave>', lambda e: hide_file_tooltip())
     
@@ -292,8 +272,6 @@ def nameSection(master, frame_width, frame_height, root):
     getName.pack(pady=10, padx=5, fill=ctk.X)
     textBox.pack(side=ctk.LEFT, pady=20, padx=30, expand=True, fill=ctk.X)
 
-
-     # Line Containers
     regline = ctk.CTkFrame(
         listFrame,
     )
@@ -305,7 +283,6 @@ def nameSection(master, frame_width, frame_height, root):
         regline,
         fg_color = colors['soft_lavender']
     )
-    # Main Frame
     editline = ctk.CTkFrame(
         regline
     )
@@ -328,7 +305,6 @@ def nameSection(master, frame_width, frame_height, root):
             getName
         ),
     )
-    # Enter Key Binding
     root.bind("<Return>", lambda event: registerName(
         getName.get().strip().title(),
         regline, 
@@ -342,12 +318,13 @@ def nameSection(master, frame_width, frame_height, root):
     ))
     regNameButton.pack(side=ctk.LEFT, pady=20, padx=30, fill=ctk.BOTH)
 
-    # Insert Parent-Component
-    regFrame.pack(side=ctk.BOTTOM, pady=30, padx=30, fill=ctk.X)
-    dropDownFrames.pack(side=ctk.BOTTOM, padx=30, pady=5, expand=True, fill=ctk.BOTH) 
-    listFrame.pack(padx=50, pady=30, side=ctk.TOP, expand=True, fill=ctk.BOTH)
-    optionFrame.pack(side=ctk.TOP, expand=True, fill=ctk.BOTH)
+    regFrame.pack(side=ctk.BOTTOM, pady=30, padx=30, fill=ctk.X, expand=True)
+    dropDownFrames.pack(side=ctk.BOTTOM, padx=30, pady=5, expand=False, fill=ctk.BOTH) 
+    listFrame.pack(side=ctk.TOP, padx=50, pady=30, expand=True, fill=ctk.BOTH)
+    optionFrame.pack(side=ctk.TOP, expand=False, fill=ctk.BOTH)
     nameSection.pack(side=ctk.LEFT, expand=True, fill=ctk.BOTH)
+ 
+
 
     glo_regline = regline
     glo_nameline = nameline
@@ -372,37 +349,29 @@ def scroll_to_top():
     global glo_listFrame
     glo_listFrame._parent_canvas.yview_moveto(0.0)
 
- # ____________________________ F I L T E R S ____________________________
-
 @bind_sidebar_toggle
 def register_filter(input_text, selection, quarter, errorLabel, edit_mode=False, old_name=None, new_name=None):
-    
-    # Empty Input
     if len(input_text) == 0: 
         errorLabel.configure(text='Please enter a Name')
         errorLabel.pack(side=ctk.LEFT, expand = True, fill=ctk.BOTH)
         return
     
-    # Input Length
     if len(input_text) < 5:
         errorLabel.configure(text='Name too short')
         errorLabel.pack(side=ctk.LEFT, expand = True, fill=ctk.BOTH)
         return
 
-    # Special Characters
     if not all(word.replace('.','').isalpha() for word in input_text.split()): 
         errorLabel.configure(text='Special Characters are not allowed')
         errorLabel.pack(side=ctk.LEFT, expand = True, fill=ctk.BOTH)
         return
     
-    # Repeated Entries
     for n in name:
         if input_text in n[0] and not edit_mode:
             errorLabel.configure(text=f'{n[0]} is already registered')
             errorLabel.pack(side=ctk.LEFT, expand = True, fill=ctk.BOTH)
             return
     
-    # Repeated Entries Edit Mode
     if edit_mode:
         for n in name:
             if old_name == n[0]:
@@ -412,13 +381,11 @@ def register_filter(input_text, selection, quarter, errorLabel, edit_mode=False,
                 errorLabel.pack(side=ctk.LEFT, expand = True, fill=ctk.BOTH)
                 return
 
-    # Empty Selection
     if not selection: 
         errorLabel.configure(text='Please add a Selection Option')
         errorLabel.pack(side=ctk.LEFT, expand = True, fill=ctk.BOTH)
         return
 
-    # Empty Quarter
     if not quarter: 
         errorLabel.configure(text='Please add a Quarter Option')
         errorLabel.pack(side=ctk.LEFT, expand = True, fill=ctk.BOTH)
@@ -427,16 +394,15 @@ def register_filter(input_text, selection, quarter, errorLabel, edit_mode=False,
     errorLabel.pack_forget()
     return True
 
-
-# Add Name to list
-iter = 1
 def registerName(input_text, regline, nameline, selectline, editline, selection, quarter, errorLabel, getName):
     global iter, name, listItem, edit_buttons, glo_clearAllButton
 
-    # Filter
+    frame_width = main_register.winfo_width()
+    frame_height = main_register.winfo_height()
+    print(f"Frame dimensions - Width: {frame_width}, Height: {frame_height}")
+
     if not register_filter(input_text, selection, quarter, errorLabel): return
     
-    # Clear All Button
     glo_clearAllButton.pack(side=ctk.TOP, pady=10)
 
     getName.delete(0, ctk.END)
@@ -451,7 +417,6 @@ def registerName(input_text, regline, nameline, selectline, editline, selection,
         fg_color= listColor
     )
 
-    # Generated label
     newLabel = ctk.CTkLabel(
         nameSpace,
         text=input_text,
@@ -463,13 +428,11 @@ def registerName(input_text, regline, nameline, selectline, editline, selection,
     newLabel.pack(side=ctk.LEFT, pady=20)
     nameSpace.pack(side=ctk.TOP, pady=0, padx= 30, expand = True, fill=ctk.BOTH)
 
-    # Attribute Space
     attributeSpace = ctk.CTkFrame(
         selectline,
         fg_color= listColor
     )
 
-    # Attribute Label
     honorSel = ctk.CTkLabel(
         attributeSpace,
         text= selection,
@@ -489,7 +452,6 @@ def registerName(input_text, regline, nameline, selectline, editline, selection,
     quarterSel.pack(side=ctk.TOP)
     attributeSpace.pack(side=ctk.TOP, pady=6)
 
-    # Button
     edit_icon = ctk.CTkImage(
         light_image = Image.open('./resources/edit_line.png'), 
         dark_image = Image.open('./resources/edit_line.png'), 
@@ -507,10 +469,8 @@ def registerName(input_text, regline, nameline, selectline, editline, selection,
     editButton.pack(side=ctk.TOP, expand=True)
     edit_buttons.append(editButton)
 
-    # Collect other buttons to disable during editing
     other_buttons = [btn for btn in editline.winfo_children() if btn != editButton]
 
-    # Set the command after the button is created
     editButton.configure(
         command=lambda: reWrite_name(
             nameSpace, 
@@ -537,7 +497,6 @@ def registerName(input_text, regline, nameline, selectline, editline, selection,
 @bind_sidebar_toggle
 def reWrite_name(nameline, selectline, editLine, nameLabel, honorLabel, quarterLabel, editButton, other_buttons, errorlabel, regline):
     global name, edit_buttons
-    # Change the button to save mode
     editButton.configure(
         text="Save", 
         image=None, 
@@ -562,13 +521,11 @@ def reWrite_name(nameline, selectline, editLine, nameLabel, honorLabel, quarterL
             deleteButton
     ))
 
-    # Hide all the current line being edited
     nameLabel.pack_forget()
     honorLabel.pack_forget()
     quarterLabel.pack_forget()
     selectline.pack_forget()
 
-    # switch the label to an entry
     entryFont = ctk.CTkFont(family="Helvetica", size=15)
     entry = ctk.CTkEntry(
         nameline, 
@@ -584,7 +541,6 @@ def reWrite_name(nameline, selectline, editLine, nameLabel, honorLabel, quarterL
 
     editButton.configure(state="normal")
 
-    # Dropdown for selection
     selection_options = [
         "With Honors", 
         "With High", 
@@ -599,7 +555,6 @@ def reWrite_name(nameline, selectline, editLine, nameLabel, honorLabel, quarterL
     )
     selection_dropdown.pack(side=ctk.LEFT, pady=20, padx=15)
 
-    # Dropdown for quarter
     quarter_options = [
         "Quarter 1", 
         "Quarter 2", 
@@ -655,18 +610,15 @@ def delete_regName(name_label=None, honor_label=None, edit_button=None, selectli
         return
     if clear_all: return
 
-    # Update Name list
     selected_line = list(filter(lambda x: x[0] == name_label.cget("text"), name))[0]
     selected_line_index = name.index(selected_line)
     name.pop(selected_line_index)
 
-    # Remove the line from the display
     name_label.pack_forget()
     name_label.master.pack_forget()
     honor_label.master.pack_forget()
     edit_button.pack_forget()
 
-    # Re-enable the other buttons
     for button in edit_buttons:
         button.configure(state="normal")
 
@@ -675,18 +627,14 @@ def delete_regName(name_label=None, honor_label=None, edit_button=None, selectli
     if len(name) == 0:
         glo_regline.pack_forget()
 
-
-
 def save_name(entry, nameLabel, selection_dropdown, honorLabel, quarter_dropdown, quarterLabel, editButton, nameline, selectline, editLine, other_buttons, errorLabel, regline, deleteButton):
     global name
 
-    # Function to save the changes and switch back to the label
     old_name = nameLabel.cget("text").title()
     new_name = entry.get().title()
     new_selection = selection_dropdown.get()
     new_quarter = quarter_dropdown.get()
 
-    # Check if the new values pass the register filter
     if not register_filter(
         new_name, 
         new_selection, 
@@ -707,13 +655,11 @@ def save_name(entry, nameLabel, selection_dropdown, honorLabel, quarter_dropdown
     quarter_dropdown.pack_forget()
     deleteButton.pack_forget()
 
-    # Make all labels reappear
     nameLabel.pack(side=ctk.LEFT, pady=20)
     honorLabel.pack(side=ctk.TOP)
     quarterLabel.pack(side=ctk.TOP)
     selectline.pack(side=ctk.LEFT, expand=True, fill=ctk.X, pady=5, padx=5)
 
-    # Change the button back to edit mode
     edit_icon = ctk.CTkImage(
         light_image = Image.open('./resources/edit_line.png'), 
         dark_image = Image.open('./resources/edit_line.png'), 
@@ -738,29 +684,18 @@ def save_name(entry, nameLabel, selection_dropdown, honorLabel, quarter_dropdown
             regline
     ))
 
-    # Re-enable the other buttons
     for button in edit_buttons:
         button.configure(state="normal")
 
-    # Show the edit button again
     editButton.pack(side=ctk.TOP, expand=True)
 
-    # Update the global name list
     for i, item in enumerate(name):
         if item[0] == old_name:
             name[i] = [new_name, new_selection, new_quarter]
             break
 
 def edit_Registered_Line(nameline, attributeLine, editLine, nameLabel, honorLabel, quarterLabel, editButton):
-    # Edit Option
     reWrite_name(nameline, attributeLine, editLine, nameLabel, honorLabel, quarterLabel, editButton)
-    
-
-
-
-# ____________________________ T E M P L A T E   S I D E B A R ____________________________
-
-# ___ SIDEBAR SECTION FUNCTION ___
 
 loading_label = None
 loading_animation = None
@@ -782,7 +717,6 @@ def sideBar(master, frame_width, frame_height, main_window):
         fg_color= colors['matte_black']
     )
 
-    # Premade-Section
     premade_temp_sect = ctk.CTkFrame(
         sidebarFrame,
         fg_color= primary_color,
@@ -807,7 +741,6 @@ def sideBar(master, frame_width, frame_height, main_window):
     )
     pre_template_image = templateImage
 
-    # Create frame to hold label and button horizontally
     label_frame = ctk.CTkFrame(
         premade_temp_sect,
         fg_color= primary_color
@@ -822,13 +755,11 @@ def sideBar(master, frame_width, frame_height, main_window):
         text_color= secondary_color
     )
     
-    # Add image button next to label
     add_icon = ctk.CTkImage(
         light_image = Image.open('./resources/icons/help.png'),
         dark_image = Image.open('./resources/icons/help.png'),
         size=(30, 30)
     )
-    # Create tooltip label
     tooltip = ctk.CTkLabel(
         label_frame,
         text="Help",
@@ -854,7 +785,6 @@ def sideBar(master, frame_width, frame_height, main_window):
         command=lambda: open_controls_page(main_window)
     )
     
-    # Bind hover events
     helpButton.bind('<Enter>', show_tooltip)
     helpButton.bind('<Leave>', hide_tooltip)
 
@@ -863,8 +793,6 @@ def sideBar(master, frame_width, frame_height, main_window):
     label_frame.pack(side=ctk.TOP, expand=True, fill=ctk.BOTH)
     templateImage.pack(side=ctk.TOP)
 
-
-    # Custom-Section
     custom_temp_sect = ctk.CTkFrame(
         sidebarFrame,
         fg_color= primary_color
@@ -891,7 +819,6 @@ def sideBar(master, frame_width, frame_height, main_window):
     ) 
     file_label_global = file_label
     
-    # Create tooltip label
     file_tooltip = ctk.CTkLabel(
         getFileFrame,
         text="Use my own template",
@@ -913,7 +840,6 @@ def sideBar(master, frame_width, frame_height, main_window):
         anchor='w'
     )
 
-    # Bind hover events
     open_file_button.bind('<Enter>', show_file_tooltip)
     open_file_button.bind('<Leave>', hide_file_tooltip)
 
@@ -921,14 +847,11 @@ def sideBar(master, frame_width, frame_height, main_window):
     file_label.pack(side=ctk.TOP, pady=10, padx=25, expand=True, fill=ctk.X) 
     getFileFrame.pack(side=ctk.LEFT, pady=10, expand=True, fill=ctk.X) 
 
-
-    # Preview Section
     preview_btn_sect = ctk.CTkFrame(
         sidebarFrame,
         fg_color= primary_color
     )
 
-    # LOADING ANIMATION
     gif_path = './resources/icons/loader.gif'
     gif_image = Image.open(gif_path)
     gif_frames = [
@@ -946,7 +869,6 @@ def sideBar(master, frame_width, frame_height, main_window):
         height = 200
     )
 
-    # Create a label for the loading text
     loading_label = ctk.CTkLabel(
         loading_frame,
         text_color= 'white',
@@ -955,7 +877,6 @@ def sideBar(master, frame_width, frame_height, main_window):
     )
     loading_label.pack(side=ctk.LEFT, padx=5)
 
-    # Create a label for the loading animation
     loading_animation = ctk.CTkLabel(
         loading_frame,
         text='',
@@ -984,10 +905,8 @@ def sideBar(master, frame_width, frame_height, main_window):
     preview_btn_sect.pack(side=ctk.TOP, expand=True, fill=ctk.X, padx=40)
     sidebarFrame.pack(side=ctk.LEFT, fill=ctk.Y)
     
-    # Globalize
     preview_btn = previewButton
 
-# Function to update the GIF frames
 def update_gif(frame_index):
         global gif_frames, loading_frame
 
@@ -996,9 +915,7 @@ def update_gif(frame_index):
         frame_index = (frame_index + 1) % len(gif_frames)
         loading_animation.after(100, update_gif, frame_index)
 
-
 def toggle_loading_animation():
-    """Toggles the loading animation visibility"""
     global loading_label, loading_animation,loading_frame
 
     if loading_label.winfo_ismapped():
@@ -1007,8 +924,6 @@ def toggle_loading_animation():
         loading_frame.pack(side=ctk.BOTTOM, expand = True)
         loading_frame.update_idletasks()
 
-
-# Upload template processor
 input_file = 'config'
 input_file_name = 'config'
 
@@ -1029,7 +944,6 @@ def open_file_dialog(premade_temp = False, pre_made_temp_path = None):
             ]
         ) 
 
-
     filename = basename(filepath) 
 
     if not filepath: return
@@ -1039,12 +953,9 @@ def open_file_dialog(premade_temp = False, pre_made_temp_path = None):
     else:
         file_label_global.configure(text=f"Selected file:      {filename[:18]} . . .")
 
-    # Globalize
     input_file = filepath
     input_file_name = filename
 
-
-# Get File Name List
 def name_list_dialog() -> list:
     global  glo_getName, nameList_File, glo_selectline, glo_nameline, glo_regline, glo_quarterBox, glo_selectionBox, glo_editline, glo_errorLabel
 
@@ -1076,16 +987,15 @@ def name_list_dialog() -> list:
                 glo_getName
         )
     
+    print(name_list)
+
     return name_list
 
-
-# Save template
 def save_file(file_path, file_name):
 
     templateFolder = join(getcwd(), 'custom_template')
     makedirs(templateFolder, exist_ok=True)
 
-    # Current-File Path
     saveto_path = join(templateFolder, file_name)
 
     try:
@@ -1094,12 +1004,9 @@ def save_file(file_path, file_name):
     except Exception as e:
         return None
 
-
 def create_template_sidebar(master, primary_color, secondary_color):
-    """Creates the template selection sidebar"""
     global template_sidebar, pre_template_image
 
-    # Main frame slider 
     mainFrame = ctk.CTkFrame(
         master,
         width=300,
@@ -1107,7 +1014,6 @@ def create_template_sidebar(master, primary_color, secondary_color):
         fg_color=primary_color
     )
 
-    # Title
     title = ctk.CTkLabel(
         mainFrame,
         text="Templates",
@@ -1116,7 +1022,6 @@ def create_template_sidebar(master, primary_color, secondary_color):
     )
     title.pack(pady=10, padx=5)
 
-    # Scrollable container
     scroll_frame = ctk.CTkScrollableFrame(
         mainFrame,
         width= 280,
@@ -1125,17 +1030,13 @@ def create_template_sidebar(master, primary_color, secondary_color):
     )
     scroll_frame.pack(pady=5, padx=5, fill="both", expand=True)
 
-    # Template button size
     btn_width = 300
     btn_height = 200
 
-    # Get list of template files and images
     template_files = [f for f in listdir('./template') if f.endswith('.docx')]
     template_images = [f for f in listdir('./resources/template_img') if f.lower().endswith('.png')]
 
-    # Create buttons for each template
     for i, image_file in enumerate(template_images, 1):
-        # Load template image
         image_path = f'./resources/template_img/{image_file}'
         template_img = ctk.CTkImage(
             light_image = Image.open(image_path),
@@ -1143,7 +1044,6 @@ def create_template_sidebar(master, primary_color, secondary_color):
             size=(btn_width, btn_height)
         )
 
-        # Create button
         btn = ctk.CTkButton(
             scroll_frame,
             width=btn_width,
@@ -1159,12 +1059,10 @@ def create_template_sidebar(master, primary_color, secondary_color):
     
     template_sidebar = mainFrame
 
-    # Initially place it outside view
     mainFrame.place(x=-350, y=0)
     return mainFrame
 
 def templateSelected(template_id: int, image_template: ctk.CTkImage):
-    """Handles the template selection"""
     global pre_template_image, pretemplate_image_path
 
     custom_template_folder = join(getcwd(), 'custom_template')
@@ -1175,15 +1073,12 @@ def templateSelected(template_id: int, image_template: ctk.CTkImage):
     copy(join(getcwd(), 'template', f'template{template_id}.docx'), custom_template_folder)
     open_file_dialog(premade_temp=True, pre_made_temp_path = f'./template/template{template_id}.docx')
 
-
 def toggle_template_sidebar():
-    """Toggles the template sidebar visibility with animation"""
     global is_sidebar_visible
 
     def run_animation():
         global template_sidebar, is_sidebar_visible
         if not is_sidebar_visible:
-            # Slide in
             template_sidebar.lift()
             for x in range(-308, 20, 20):
                 template_sidebar.place(x=x, y=0)
@@ -1191,14 +1086,12 @@ def toggle_template_sidebar():
                 time.sleep(0.005)
             is_sidebar_visible = True
         else:
-            # Slide out
             for x in range(20, -330, -20):
                 template_sidebar.place(x=x, y=0)
                 template_sidebar.update()
                 time.sleep(0.005)
             is_sidebar_visible = False
 
-    # Run the animation in a separate thread
     threading.Thread(target=run_animation).start()
 
 def close_sidebar_asClicked():
@@ -1227,13 +1120,11 @@ def filter_pageProcedure(file_label):
     else:
         return
 
-# Opens next page
 def preview_page_setup():
     global premade_template, one_click_preview, glo_errorLabel
 
     one_click_preview = False
 
-    # Add file to app dir
     if save_file(input_file, input_file_name):
         ...
     else:
@@ -1241,7 +1132,6 @@ def preview_page_setup():
         toggle_loading_animation()
         return glo_errorLabel.configure(text = 'Failed to save template file.')
 
-    # Convert file to image for prev
     img_path = convert_one_img(name, input_file_name)
     if img_path:
         ...
@@ -1250,20 +1140,16 @@ def preview_page_setup():
         toggle_loading_animation()
         return glo_errorLabel.configure(text = 'Failed to generate Image. Ensure Microsoft Word or WPS is installed.')
 
-    # Turn off loading animation
     toggle_loading_animation()
 
-    # Provide all data to next modal/page
     if globalizeData(root, main_register, frameWidth, frameHeight, colors, img_path, name, input_file, input_file_name):
         ...
     else:
         one_click_preview = True
         return glo_errorLabel.configure(text = 'Internal Server Error, Cannot globalize Data.')
 
-    # hide current modal
     main_register.pack_forget()
 
     one_click_preview = True
 
-    # open next modal
     openPreview(root)
