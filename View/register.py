@@ -543,8 +543,8 @@ def reWrite_name(nameline, selectline, editLine, nameLabel, honorLabel, quarterL
 
     selection_options = [
         "With Honors", 
-        "With High", 
-        "With Highest"
+        "With High Honors", 
+        "With Highest Honors"
     ]
     
     selection_var = ctk.StringVar(value=honorLabel.cget("text"))
